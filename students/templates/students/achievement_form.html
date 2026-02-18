@@ -1,0 +1,61 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                    <h3 class="fw-bold mb-0" style="letter-spacing: -1px;">
+                        {% if form.instance.pk %}Edit Achievement{% else %}Add Achievement{% endif %}
+                    </h3>
+                    <p class="text-muted small">Record academic or extra-curricular accomplishments.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" class="row g-3">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="{% if field.name == 'description' %}col-12{% else %}col-md-6{% endif %}">
+                            <label class="form-label small fw-bold text-muted mb-1">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger x-small mt-1">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        
+                        <div class="col-12 mt-4 pt-3 border-top d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-bold">
+                                <i class="fas fa-check-circle me-2"></i>Save Achievement
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-light px-4 py-2 rounded-3 text-muted">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input, select, textarea {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        color: #333;
+        background-color: #f8f9fa;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+        background-color: #fff;
+        border-color: var(--primary-color);
+        outline: 0;
+        box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+    }
+    .x-small { font-size: 0.75rem; }
+    input[type="file"] { padding: 0.6rem; }
+</style>
+{% endblock %}

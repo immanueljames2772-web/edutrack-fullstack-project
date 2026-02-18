@@ -1,0 +1,62 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-5 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-body p-5">
+                <div class="text-center mb-5">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 d-inline-block mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                    </div>
+                    <h2 class="fw-bold" style="letter-spacing: -1px;">Welcome Back</h2>
+                    <p class="text-muted">Enter your credentials to continue</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-danger x-small mt-1">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold mt-2 shadow-sm">
+                        Sign In
+                    </button>
+                </form>
+                <div class="mt-5 p-3 bg-light rounded-4 text-center">
+                    <p class="small text-muted mb-0">Demo credentials</p>
+                    <p class="small fw-bold mb-0">admin / admin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #333;
+        background-color: #f8f9fa;
+        background-clip: padding-box;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+    input:focus {
+        background-color: #fff;
+        border-color: var(--primary-color);
+        outline: 0;
+        box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+    }
+    .x-small { font-size: 0.75rem; }
+</style>
+{% endblock %}

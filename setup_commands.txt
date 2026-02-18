@@ -1,0 +1,20 @@
+# Database Setup (MySQL)
+# Run this in your MySQL client:
+CREATE DATABASE student_db;
+
+# Install Dependencies
+pip install django mysqlclient pillow mysql-connector-python pymongo faker
+
+# Django Setup
+python manage.py makemigrations
+python manage.py migrate
+
+# Create Superuser and Seed Data (30 students, categories, achievements)
+python manage.py seed_data
+
+# Run Server
+python manage.py runserver
+
+# Run CRUD Menu Programs
+python mysql_menu_crud.py
+python mongodb_menu_crud.py

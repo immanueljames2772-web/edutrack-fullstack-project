@@ -1,0 +1,115 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row align-items-center mb-4">
+        <div class="col">
+            <h1 class="fw-bold h2 mb-0">Student Directory</h1>
+            <p class="text-muted mb-0">List of all students registered in the system</p>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="col-auto">
+            <a href="{% url 'student_add' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>New Student
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Modern Search -->
+    <div class="card glass-card border-0 mb-4 p-3 shadow-sm">
+        <form method="get">
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-0 pe-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" class="form-control border-0 shadow-none bg-transparent" name="q" placeholder="Search by name, ID or department..." value="{{ request.GET.q }}">
+                    </div>
+                </div>
+                <div class="col-md-auto">
+                    <button class="btn btn-light border-0 px-4" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Student Grid -->
+    <div class="row g-4">
+        {% for student in students %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3" style="width: 54px; height: 54px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user-graduate fa-lg"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0 text-truncate" style="max-width: 150px;">{{ student.name }}</h5>
+                                <small class="text-muted">{{ student.register_number }}</small>
+                            </div>
+                        </div>
+                        <span class="badge {% if student.status == 'Active' %}bg-success{% else %}bg-secondary{% endif %} bg-opacity-10 {% if student.status == 'Active' %}text-success{% else %}text-secondary{% endif %} px-3 rounded-pill">
+                            {{ student.status }}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-building text-muted me-2" style="width: 16px;"></i>
+                            <span class="small">{{ student.department }}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope text-muted me-2" style="width: 16px;"></i>
+                            <span class="small text-truncate">{{ student.email }}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'student_detail' student.pk %}" class="btn btn-light btn-sm flex-grow-1 border-0">View Profile</a>
+                        {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="btn btn-light btn-sm border-0" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                                <li><a class="dropdown-item" href="{% url 'student_edit' student.pk %}"><i class="fas fa-edit me-2 text-warning"></i>Edit</a></li>
+                                <li><a class="dropdown-item" href="{% url 'achievement_add' %}?student={{ student.pk }}"><i class="fas fa-award me-2 text-success"></i>Add Achievement</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'student_delete' student.pk %}"><i class="fas fa-trash me-2"></i>Delete</a></li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="bg-white rounded-5 p-5 shadow-sm d-inline-block">
+                <i class="fas fa-search fa-3x text-light mb-3"></i>
+                <h5 class="fw-bold">No students found</h5>
+                <p class="text-muted mb-0">Try adjusting your search filters.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link border-0 shadow-sm mx-1 rounded-3" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i class="fas fa-chevron-left"></i></a></li>
+            {% endif %}
+            
+            <li class="page-item active"><span class="page-link border-0 shadow-sm mx-1 rounded-3">{{ page_obj.number }}</span></li>
+            
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link border-0 shadow-sm mx-1 rounded-3" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i class="fas fa-chevron-right"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
